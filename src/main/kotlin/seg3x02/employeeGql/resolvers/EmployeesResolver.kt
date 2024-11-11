@@ -12,7 +12,7 @@ import java.util.*
 class EmployeesResolver(private val employeesRepository: EmployeesRepository) {
 
     @QueryMapping
-    fun employees(): Iterable<Employee> = employeesRepository.findAll()
+    fun employees(): List<Employee> = employeesRepository.findAll()
 
     @QueryMapping
     fun employeeById(@Argument id: String): Employee? = employeesRepository.findById(id).orElse(null)
@@ -26,37 +26,11 @@ class EmployeesResolver(private val employeesRepository: EmployeesRepository) {
             salary = input.salary,
             gender = input.gender,
             email = input.email
-        ).apply { id = UUID.randomUUID().toString() }  // Assign a unique ID
+        )
+        newEmployee.id = UUID.randomUUID().toString()  // Assign a unique ID
         return employeesRepository.save(newEmployee)
     }
 
-    @MutationMapping
-    fun updateEmployee(@Argument id: String, @Argument input: EmployeeInput): Employee {
-        // Retrieve the existing employee or throw an error if not found
-        val existingEmployee = employeesRepository.findById(id).orElseThrow { RuntimeException("Employee not found") }
-        
-        // Create a new Employee instance with updated values
-        val updatedEmployee = Employee(
-            name = input.name,
-            dateOfBirth = input.dateOfBirth,
-            city = input.city,
-            salary = input.salary,
-            gender = input.gender,
-            email = input.email
-        ).apply { this.id = existingEmployee.id } // Keep the same ID
-        
-        return employeesRepository.save(updatedEmployee)
-    }
-
-    @MutationMapping
-    fun deleteEmployee(@Argument id: String): Boolean {
-        return if (employeesRepository.existsById(id)) {
-            employeesRepository.deleteById(id)
-            true
-        } else {
-            false
-        }
-    }
 }
 
 data class EmployeeInput(

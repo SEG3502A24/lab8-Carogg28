@@ -4,9 +4,7 @@ type Query {
 }
 
 type Mutation {
-    addEmployee(input: EmployeeInput!): Employee
-    updateEmployee(id: ID!, input: EmployeeInput!): Employee
-    deleteEmployee(id: ID!): Boolean
+    addEmployee(input: EmployeeInput!): Employee!
 }
 
 type Employee {
