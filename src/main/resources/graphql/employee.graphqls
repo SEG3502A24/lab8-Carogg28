@@ -1,6 +1,7 @@
 type Query {
     employees: [Employee]
     employeeById(id: ID!): Employee
+    employeeByEmail(email: String!): Employee
 }
 
 type Mutation {
