@@ -1,11 +1,10 @@
 type Query {
     employees: [Employee]
     employeeById(id: ID!): Employee
-    employeeByEmail(email: String!): Employee
 }
 
 type Mutation {
-    addEmployee(input: EmployeeInput!): Employee!
+    newEmployee(createEmployeeInput: CreateEmployeeInput!): Employee!
 }
 
 type Employee {
@@ -18,7 +17,7 @@ type Employee {
     email: String
 }
 
-input EmployeeInput {
+input CreateEmployeeInput {
     name: String!
     dateOfBirth: String!
     city: String!

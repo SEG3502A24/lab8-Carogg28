@@ -9,39 +9,34 @@ import seg3x02.employeeGql.repository.EmployeesRepository
 import java.util.*
 
 @Controller
-class EmployeesResolver(private val employeesRepository: EmployeesRepository) {
+class EmployeesResolver(private val employeeRepository: EmployeesRepository) {
 
     @QueryMapping
-    fun employees(): List<Employee> = employeesRepository.findAll()
+    fun employees(): List<Employee> = employeeRepository.findAll()
 
     @QueryMapping
-    fun employeeById(@Argument id: String): Employee? =
-        employeesRepository.findById(id).orElse(null)
-
-    @QueryMapping
-    fun employeeByEmail(@Argument email: String): Employee? =
-        employeesRepository.findAll().find { it.email == email }
+    fun employeeById(@Argument id: String): Employee? = employeeRepository.findById(id).orElse(null)
 
     @MutationMapping
-    fun addEmployee(@Argument input: EmployeeInput): Employee {
-        val newEmployee = Employee(
-            name = input.name ?: throw Exception("Please enter a name"),
-            dateOfBirth = input.dateOfBirth ?: throw Exception("Please enter a valid date of birth"),
-            city = input.city ?: throw Exception("Please enter a valid city"),
-            salary = input.salary ?: throw Exception("Please enter a valid salary"),
-            gender = input.gender,
-            email = input.email
+    fun newEmployee(@Argument createEmployeeInput: CreateEmployeeInput): Employee {
+        val employee = Employee(
+            name = createEmployeeInput.name,
+            dateOfBirth = createEmployeeInput.dateOfBirth,
+            city = createEmployeeInput.city,
+            salary = createEmployeeInput.salary,
+            gender = createEmployeeInput.gender,
+            email = createEmployeeInput.email
         )
-        newEmployee.id = UUID.randomUUID().toString()
-        return employeesRepository.save(newEmployee)
+        employee.id = UUID.randomUUID().toString()  // Assign a unique ID
+        return employeeRepository.save(employee)
     }
 }
 
-data class EmployeeInput(
-    val name: String?,
-    val dateOfBirth: String?,
-    val city: String?,
-    val salary: Float?,
+data class CreateEmployeeInput(
+    val name: String,
+    val dateOfBirth: String,
+    val city: String,
+    val salary: Float,
     val gender: String?,
     val email: String?
 )
